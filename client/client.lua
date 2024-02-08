@@ -51,8 +51,7 @@ RegisterNetEvent('qb-carrentals:client:Confirmed')
 AddEventHandler('qb-carrentals:client:Confirmed', function(num, plate, closeveh)
 		QBCore.Functions.SpawnVehicle(CRConfig.RentingPositions[num].vehicle, function(veh)
 			-- TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
-			--exports['qb-fuel']:SetFuelLevel(veh, GetVehicleNumberPlateText(veh), 100, false)
-			exports['LegacyFuel']:SetFuel(veh, 100.0)
+			exports['cdn-fuel']:SetFuel(veh, 80.0)
 			SetVehicleNumberPlateText(veh, plate)
 			SetEntityHeading(veh, CRConfig.RentingPositions[num].coords.h)
 			SetEntityAsMissionEntity(veh, true, true)
@@ -67,7 +66,6 @@ AddEventHandler('qb-carrentals:client:Confirmed', function(num, plate, closeveh)
 			local plateText = plate
 			  TriggerServerEvent("qb-rental:giverentalpaperServer", model, plateText)
 		end, CRConfig.RentingPositions[num].coords, true)
-	-- end
 end)
 
 RegisterNetEvent('qb-carrentals:client:EndRental')
@@ -76,13 +74,12 @@ AddEventHandler('qb-carrentals:client:EndRental', function(currentcar1)
 		renting = false
 
 		SetEntityInvincible(currentcar1,true)
-		FreezeEntityPosition(currentcar1,true)
+		--FreezeEntityPosition(currentcar1,true)
 		Citizen.Wait(10000)
 
 		QBCore.Functions.DeleteVehicle(currentcar1)
 	end
 end)
-
 
 
 Citizen.CreateThread(function()
@@ -102,14 +99,12 @@ Citizen.CreateThread(function()
 		local veh = CreateVehicle(model, CRConfig.RentingPositions[i].coords.x, CRConfig.RentingPositions[i].coords.y, CRConfig.RentingPositions[i].coords.z, false, false)
 		SetModelAsNoLongerNeeded(model)
 		SetVehicleOnGroundProperly(veh)
-		SetVehicleOnGroundProperly(veh)
-		Citizen.Wait(500)
 		SetEntityInvincible(veh,true)
         SetEntityHeading(veh, CRConfig.RentingPositions[i].coords.h)
         SetVehicleDoorsLocked(veh, 3)
-		FreezeEntityPosition(veh,true)
-
-		SetVehicleNumberPlateText(veh, i .. "OSMFX")
+		Citizen.Wait(100)
+		--FreezeEntityPosition(veh,true)
+		SetVehicleNumberPlateText(veh, i .. "RENTAL")
 		-- local poles = GetClosestObjectOfType(CRConfig.RentingPositions[i].coords.x, CRConfig.RentingPositions[i].coords.y, CRConfig.RentingPositions[i].coords.z, 5.0, -1063472968, false, 0, 0)
 		-- DeleteEntity(poles)
     end
@@ -134,14 +129,14 @@ Citizen.CreateThread(function()
 
 				local veh = CreateVehicle(model, CRConfig.RentingPositions[i].coords.x, CRConfig.RentingPositions[i].coords.y, CRConfig.RentingPositions[i].coords.z, false, false)
 				SetModelAsNoLongerNeeded(model)
-				SetVehicleOnGroundProperly(veh)
+				--SetVehicleOnGroundProperly(veh)
 				SetEntityInvincible(veh,true)
 				SetEntityHeading(veh, CRConfig.RentingPositions[i].coords.h)
 				SetVehicleDoorsLocked(veh, 3)
 				SetVehicleOnGroundProperly(veh)
-
-				FreezeEntityPosition(veh,true)
-				SetVehicleNumberPlateText(veh, i .. "OSMFX")
+				Citizen.Wait(100)
+				--FreezeEntityPosition(veh,true)
+				SetVehicleNumberPlateText(veh, i .. "RENTAL")
 				local poles = GetClosestObjectOfType(CRConfig.RentingPositions[i].coords.x, CRConfig.RentingPositions[i].coords.y, CRConfig.RentingPositions[i].coords.z, 5.0, -1063472968, false, 0, 0)
 				DeleteEntity(poles)
 			end
@@ -154,7 +149,6 @@ local ClosestShop = 1
 
 Citizen.CreateThread(function()
     while true do
-		-- print('loop1')
         local pos = GetEntityCoords(PlayerPedId(), true)
 	    for i = 1, #CRConfig.RentalSpots, 1 do
 			local ShopDistance = GetDistanceBetweenCoords(pos, CRConfig.RentalSpots[i].coords.x, CRConfig.RentalSpots[i].coords.y, CRConfig.RentalSpots[i].coords.z, false)
@@ -176,12 +170,10 @@ end)
 
 Citizen.CreateThread(function()
     while true do
-		-- print('loop1')
         local pos = GetEntityCoords(PlayerPedId(), true)
 			local ShopDistance = GetDistanceBetweenCoords(pos, CRConfig.RentalSpots[ClosestShop].coords.x, CRConfig.RentalSpots[ClosestShop].coords.y, CRConfig.RentalSpots[ClosestShop].coords.z, false)
 				if ShopDistance < 50 then
-					--Draw3DText(CRConfig.RentalSpots[ClosestShop].coords.x, CRConfig.RentalSpots[ClosestShop].coords.y, CRConfig.RentalSpots[ClosestShop].coords.z + 0.2, 'Car Rental Zone', 4, 0.5, 0.5, CRConfig.PrimaryColor)
-					Draw3DText(CRConfig.RentalSpots[ClosestShop].coords.x, CRConfig.RentalSpots[ClosestShop].coords.y, CRConfig.RentalSpots[ClosestShop].coords.z - 0.75 , 'Rent Cars Starting at Just $5000 an hour!', 4, 0.08, 0.08, CRConfig.SecondaryColor)
+					Draw3DText(CRConfig.RentalSpots[ClosestShop].coords.x, CRConfig.RentalSpots[ClosestShop].coords.y, CRConfig.RentalSpots[ClosestShop].coords.z + 0.1 , 'Location de voitures', 4, 0.1, 0.1, CRConfig.SecondaryColor)
 					Citizen.Wait(10)
 				else 
 					Citizen.Wait(4000)
@@ -227,7 +219,7 @@ AddEventHandler('qb-carrentals:client:NonPayment', function(veh)
 	if veh ~= nil and renting and npbool then 
 		Citizen.Wait(CRConfig.NonPayment * 60000) 
 		renting = false
-		FreezeEntityPosition(veh, true)
+		--FreezeEntityPosition(veh, true)
 		Citizen.Wait(25000)
 		QBCore.Functions.DeleteVehicle(veh)
 		TriggerServerEvent('qb-carrentals:server:SetDone', veh)
@@ -237,44 +229,29 @@ AddEventHandler('qb-carrentals:client:NonPayment', function(veh)
 end)
 
 Citizen.CreateThread(function()
-    while true do
-		-- print(rentcar1)
-		-- print(renting)
-		if rentcar1 ~= nil and renting then 
-			if not IsPedInAnyVehicle(PlayerPedId(), true) then 
-				local currentcar = QBCore.Functions.GetClosestVehicle()
-				if currentcar ~= nil then 
-					if currentcar == rentcar1 then 
-						local carcoords = GetEntityCoords(currentcar)
-						Draw3DText(carcoords.x, carcoords.y, carcoords.z - 0.8, '[U] - Return Rented Vehicle', 4, 0.08, 0.08, CRConfig.SecondaryColor)
-						if IsControlJustPressed(0, 303) then
-							print(currentcar)
-							TriggerServerEvent('qb-carrentals:server:EndRental', currentcar)
-							TriggerEvent('qb-carrentals:client:EndRental', currentcar)
-							TriggerServerEvent('qb-rental:removepapers')
-							if CRConfig.DamageCharges.enable then
-								local health = GetVehicleBodyHealth(currentcar)
-								TriggerServerEvent('qb-carrentals:server:EngineHealth', health)
-							end
-							-- breaktick = true
-						end
-					end
-				end
-				if not isLoggedIn then
-					QBCore.Functions.DeleteVehicle(rentcar1) 
-					TriggerServerEvent('qb-carrentals:server:SetDone', rentcar1)
-				end
-				if not DoesEntityExist(rentcar1) then 
-					TriggerServerEvent('qb-carrentals:server:SetDone', rentcar1)
-				end
-				Citizen.Wait(5)
-			else 
-				Citizen.Wait(2500)
-			end
-		else
-			Citizen.Wait(5000)
-		end
-	end
+    while true do 
+        Citizen.Wait(5000)
+        if isLoggedIn then
+            if renting and rentcar1 ~= nil then 
+                if not IsPedInAnyVehicle(PlayerPedId(), true) then 
+                    local currentcar = QBCore.Functions.GetClosestVehicle()
+                    if currentcar == rentcar1 then 
+                        local carcoords = GetEntityCoords(currentcar)
+                        Draw3DText(carcoords.x, carcoords.y, carcoords.z - 0.8, '[U] - Return Rented Vehicle', 4, 0.08, 0.08, CRConfig.SecondaryColor)
+                        if IsControlJustPressed(0, 303) then
+                            TriggerServerEvent('qb-carrentals:server:EndRental', currentcar)
+                            TriggerEvent('qb-carrentals:client:EndRental', currentcar)
+                            TriggerServerEvent('qb-rental:removepapers')
+                            if CRConfig.DamageCharges.enable then
+                                local health = GetVehicleBodyHealth(currentcar)
+                                TriggerServerEvent('qb-carrentals:server:EngineHealth', health)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
 end)
 
 local breaktick = false -- TO BREAK TICK WHEN NOT IN USE
@@ -318,24 +295,25 @@ function Draw3DText(x,y,z,textInput,fontId,scaleX,scaleY,color)
 	ClearDrawOrigin()
   end
 
+  Citizen.CreateThread(function()
+    while true do
+        Citizen.Wait(1000)
+        if isLoggedIn then
+            SetClosestRentalVeh()
+        end
+    end
+end)
+
   function SetClosestRentalVeh()
     local pos = GetEntityCoords(PlayerPedId(), true)
     local current = nil
     local dist = nil
-	--('setclose')
     for id, veh in pairs(CRConfig.RentingPositions) do
-        if current ~= nil then
-            if(GetDistanceBetweenCoords(pos, CRConfig.RentingPositions[id].coords.x, CRConfig.RentingPositions[id].coords.y, CRConfig.RentingPositions[id].coords.z, true) < dist)then
-                current = id
-                dist = GetDistanceBetweenCoords(pos, CRConfig.RentingPositions[id].coords.x, CRConfig.RentingPositions[id].coords.y, CRConfig.RentingPositions[id].coords.z, true)
-            end
-        else
-            dist = GetDistanceBetweenCoords(pos, CRConfig.RentingPositions[id].coords.x, CRConfig.RentingPositions[id].coords.y, CRConfig.RentingPositions[id].coords.z, true)
+        local distance = GetDistanceBetweenCoords(pos, veh.coords.x, veh.coords.y, veh.coords.z, true)
+        if current == nil or distance < dist then
             current = id
+            dist = distance
         end
     end
-    if current ~= ClosestRentalVeh then
-        ClosestRentalVeh = current
-    end
-	print(ClosestRentalVeh)
+    ClosestRentalVeh = current
 end
