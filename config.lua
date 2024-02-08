@@ -3,9 +3,9 @@
 
 CRConfig = {}
 
-CRConfig.RefreshCars = 5 -- MINUTES AFTER WHICH EMPTY CAR SLOTS GET REFILLED
+CRConfig.RefreshCars = 60 -- MINUTES AFTER WHICH EMPTY CAR SLOTS GET REFILLED
 
-CRConfig.DriveTime = 30 -- MINUTES AFTER PERSON WILL BE CHARGED AGAIN 
+CRConfig.DriveTime = 60 -- MINUTES AFTER PERSON WILL BE CHARGED AGAIN 
 
 CRConfig.NonPayment = 10 -- IN CASE OF NON-PAYMENT(LOW CASH/BANK) CAR WILL BE DELETED IN THESE MINUTES!
 
@@ -18,41 +18,41 @@ CRConfig.RentingPositions = {
         coords = {
             x = 278.58197021484, y = -592.37957763672, z = 42.261516571045, h = 67.754776000977 
         },
-        vehicle = "hermes",
+        vehicle = "blista",
         buying = false,
-        rentcost = 6000,
+        rentcost = 300,
     }, 
     [2] = {
         coords = {
             x = 281.46957397461, y = -585.10882568359, z = 42.294975280762, h = 68.783508300781 
         },
-        vehicle = "neon",
+        vehicle = "blista",
         buying = false,
-        rentcost = 3000,
+        rentcost = 300,
     },
     [3] = {
         coords = {
             x = 284.20724487305, y = -578.91467285156, z = 42.218921661377, h = 67.055213928223 
         },
-        vehicle = "neon",
+        vehicle = "blista",
         buying = false,
-        rentcost = 8000,
+        rentcost = 300,
     }, 
     [4] = {
         coords = {
             x = 282.85913085938, y = -581.95855712891, z = 42.26879119873, h = 68.766624450684
         },
-        vehicle = "neon",
+        vehicle = "blista",
         buying = false,
-        rentcost = 8000,
+        rentcost = 300,
     },  
     [5] = {
         coords = {
             x = 280.3024597168, y = -588.45440673828, z = 42.297096252441, h = 68.79224395752
         },
-        vehicle = "neon",
+        vehicle = "blista",
         buying = false,
-        rentcost = 7000,
+        rentcost = 300,
     },  
     
     -- GARAGE NEAR MOTELS
@@ -61,9 +61,9 @@ CRConfig.RentingPositions = {
         coords = {
             x = 301.01171875, y = -330.37561035156, z = 43.919872283936, h = 74.321479797363
         },
-        vehicle = "autarch",
+        vehicle = "blista",
         buying = false,
-        rentcost = 5000,
+        rentcost = 300,
     },  
 }
 
